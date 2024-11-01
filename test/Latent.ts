@@ -155,6 +155,18 @@ describe('Latent', () => {
       expect(await latent.read.ownerOf([1n])).to.equal(getAddress(signer1.account.address))
     })
 
+    it('should not allow token transfers by anyone but the owner', async () => {
+      const { latent, owner, signer1 } = await loadFixture(latentFixture)
+
+      await expect(latent.write.transferFrom([
+        owner.account.address,
+        signer1.account.address,
+        1n
+      ], {
+        account: signer1.account
+      })).to.be.revertedWithCustomError(latent, 'ERC721InsufficientApproval')
+    })
+
     it('should update balances after transfer', async () => {
       const { latent, owner, signer1 } = await loadFixture(latentFixture)
 
@@ -166,6 +178,21 @@ describe('Latent', () => {
 
       expect(await latent.read.balanceOf([owner.account.address])).to.equal(79n)
       expect(await latent.read.balanceOf([signer1.account.address])).to.equal(1n)
+    })
+  })
+
+  describe('Token Burns', () => {
+    it('should allow the token owner to burn the token', async () => {
+      const { latent } = await loadFixture(latentFixture)
+
+      await expect(latent.write.burn([ 1n ])).not.to.be.reverted
+    })
+
+    it('should not allow anyone but the token owner to burn the token', async () => {
+      const { latent, signer1 } = await loadFixture(latentFixture)
+
+      await expect(latent.write.burn([ 1n ], { account: signer1.account }))
+        .to.be.revertedWithCustomError(latent, 'ERC721InsufficientApproval')
     })
   })
 })

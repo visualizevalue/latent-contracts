@@ -57,8 +57,8 @@ contract Latent is ERC721 {
         return Encode.json(abi.encodePacked(
             '{'
                 '"id": ', id, ','
-                '"name": "\\"', tokenName(tokenId), '\\" - Digital Negative, Latent (', id, ' of 80)",'
-                '"description": "Digital negative as primary artifact.",',
+                '"name": "', tokenName(tokenId), '",'
+                '"description": "Digital Negative, Latent (', id, ' of 80)",'
                 '"image": "ipfs://', contentId, '/negative/', id, '.jpg",'
                 '"animation_url": "', Encode.svg(bytes(tokenAnimation(tokenId, 'https://ipfs.vv.xyz/ipfs'))), '",'
                 '"attributes": ['

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2160 2160">
+  <!-- IMAGES -->
+  <image href="./dist/positive/1.jpg" height="2160" width="2160"/>
+  <image href="./dist/negative/1.jpg" height="2160" width="2160">
+    <animate attributeName="opacity" from="1" to="0" dur="0.4s" begin="positive.begin" fill="freeze"/>
+    <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="negative.begin" fill="freeze"/>
+  </image>
+  <!-- CONTROLS -->
+  <rect width="0" height="2160" fill="transparent">
+    <animate attributeName="width" from="2160" to="0" dur="0.4s" begin="click" fill="freeze" id="negative" />
+    <animate attributeName="width" from="0" to="2160" dur="0.4s" begin="positive.begin" fill="freeze" />
+  </rect>
+  <rect width="2160" height="2160" fill="transparent">
+    <animate attributeName="width" from="0" to="2160" dur="0.4s" begin="negative.begin" fill="freeze" />
+    <animate attributeName="width" from="2160" to="0" dur="0.4s" begin="click" fill="freeze" id="positive" />
+  </rect>
+</svg>

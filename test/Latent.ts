@@ -1,7 +1,8 @@
+import fs from 'fs'
 import { expect } from 'chai'
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
 import { latentFixture } from './fixtures'
-import { decodeBase64URI } from '../helpers/decode-uri'
+import { decodeBase64URI, decodeSvgDataUri } from '../helpers/decode-uri'
 import { getAddress } from 'viem'
 import tokens from './../data/tokens.json'
 
@@ -10,6 +11,8 @@ interface TokenNames {
 }
 
 const tokenNames = tokens as TokenNames
+const TEMPLATE = fs.readFileSync('data/TEMPLATE.svg').toString('utf8')
+const CID = 'QmNT8pBktjfhQvLK7YAGubFEBn1Z1DKDM5zGtyufuWiKwS'
 
 describe('Latent', () => {
   describe('Deployment', () => {
@@ -33,7 +36,7 @@ describe('Latent', () => {
 
       expect(data.name).to.equal('Latent')
       expect(data.description).to.equal('The infinite between.')
-      expect(data.image).to.equal('ipfs://QmNT8pBktjfhQvLK7YAGubFEBn1Z1DKDM5zGtyufuWiKwS/positive/1.jpg')
+      expect(data.image).to.equal(`ipfs://${CID}/positive/1.jpg`)
     })
   })
 
@@ -76,6 +79,29 @@ describe('Latent', () => {
       }
     })
 
+    it('should expose the animation', async () => {
+      const { latent } = await loadFixture(latentFixture)
+
+      const ids = Object.keys(tokens)
+      for (const id of ids) {
+        const svg = TEMPLATE
+          .replace(
+            './dist/positive/1.jpg',
+            `https://ipfs.vv.xyz/ipfs/${CID}/positive/${id}.jpg`
+          )
+          .replace(
+            './dist/negative/1.jpg',
+            `https://ipfs.vv.xyz/ipfs/${CID}/negative/${id}.jpg`
+          )
+          .replace(/\n/g, '')           // Remove all newlines
+          .replace(/\s+\</g, '<')       // Remove all whitespace
+          .trim()
+
+        expect(await latent.read.tokenAnimation([BigInt(id)]))
+          .to.equal(svg)
+      }
+    })
+
     it('should expose onchain metadata', async () => {
       const { latent } = await loadFixture(latentFixture)
 
@@ -88,7 +114,26 @@ describe('Latent', () => {
         expect(data.name).to.equal(tokenNames[id])
         expect(data.description).to.equal('Digital negative as primary artifact.')
 
-        expect(data.image).to.equal(`ipfs://QmNT8pBktjfhQvLK7YAGubFEBn1Z1DKDM5zGtyufuWiKwS/negative/${id}.jpg`)
+        expect(data.image).to.equal(`ipfs://${CID}/negative/${id}.jpg`)
+
+
+        const svg = TEMPLATE
+          .replace(
+            './dist/positive/1.jpg',
+            `https://ipfs.vv.xyz/ipfs/${CID}/positive/${id}.jpg`
+          )
+          .replace(
+            './dist/negative/1.jpg',
+            `https://ipfs.vv.xyz/ipfs/${CID}/negative/${id}.jpg`
+          )
+          .replace(/\n/g, '')           // Remove all newlines
+          .replace(/\s+\</g, '<')       // Remove all whitespace
+          .trim()
+
+        expect(decodeSvgDataUri(data.animation_url))
+          .to.equal(
+            decodeSvgDataUri(`data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`)
+          )
 
         expect(data.attributes.length).to.equal(1)
         expect(data.attributes[0].trait_type).to.equal('Artist')

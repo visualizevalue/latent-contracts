@@ -54,6 +54,7 @@ contract Latent is ERC721 {
                 '"name": "', tokenName(tokenId), '",'
                 '"description": "Digital negative as primary artifact.",',
                 '"image": "ipfs://', contentId, '/negative/', Strings.toString(tokenId), '.jpg",'
+                '"animation_url": "', Encode.svg(bytes(tokenAnimation(tokenId, 'https://ipfs.vv.xyz/ipfs'))), '",'
                 '"attributes": ['
                     '{'
                         '"trait_type": "Artist",'
@@ -72,6 +73,40 @@ contract Latent is ERC721 {
         string[] memory names = abi.decode(SSTORE2.read(nameStorage), (string[]));
 
         return names[tokenId - 1];
+    }
+
+    /// @notice Get the animation SVG for a given token
+    /// @param tokenId The token ID get the uri for
+    function tokenAnimation(uint256 tokenId) public view returns (string memory) {
+        return tokenAnimation(tokenId, "https://ipfs.vv.xyz/ipfs");
+    }
+
+    /// @notice Get the animation SVG for a given token, resolving them via a custom IPFS gateway
+    /// @param tokenId The token ID get the uri for
+    /// @param gateway The IPFS gateway to use to resolve the images
+    function tokenAnimation(uint256 tokenId, string memory gateway) public view returns (string memory) {
+        _requireOwned(tokenId);
+
+        return string(abi.encodePacked(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2160 2160">'
+                '<!-- IMAGES -->'
+                '<image href="', gateway, '/', contentId, '/positive/', Strings.toString(tokenId), '.jpg" height="2160" width="2160"/>'
+                '<image href="', gateway, '/', contentId, '/negative/', Strings.toString(tokenId), '.jpg" height="2160" width="2160">'
+                    '<animate attributeName="opacity" from="1" to="0" dur="0.4s" begin="positive.begin" fill="freeze"/>'
+                    '<animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="negative.begin" fill="freeze"/>'
+                '</image>'
+
+                '<!-- CONTROLS -->'
+                '<rect width="0" height="2160" fill="transparent">'
+                    '<animate attributeName="width" from="2160" to="0" dur="0.4s" begin="click" fill="freeze" id="negative" />'
+                    '<animate attributeName="width" from="0" to="2160" dur="0.4s" begin="positive.begin" fill="freeze" />'
+                '</rect>'
+                '<rect width="2160" height="2160" fill="transparent">'
+                    '<animate attributeName="width" from="0" to="2160" dur="0.4s" begin="negative.begin" fill="freeze" />'
+                    '<animate attributeName="width" from="2160" to="0" dur="0.4s" begin="click" fill="freeze" id="positive" />'
+                '</rect>'
+            '</svg>'
+        ));
     }
 }
 

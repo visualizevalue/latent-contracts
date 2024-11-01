@@ -11,7 +11,11 @@ contract Latent is ERC721 {
 
     string public constant name        = "Latent";
     string public constant symbol      = "LATENT";
-    string public constant description = "The infinite between.";
+    string public constant description = "80 surrealist works exploring the space between real and realized, "
+                                         "premiering at Paris Photo 2024 on surrealism's centennial. "
+                                         "Each token serves as an original digital negative, "
+                                         "materializing as Silver Gelatin Prints "
+                                         "via Paris's historic PICTO laboratory.";
     string public constant contentId   = "QmNT8pBktjfhQvLK7YAGubFEBn1Z1DKDM5zGtyufuWiKwS";
 
     // @dev Token names storage locations

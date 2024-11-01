@@ -25,7 +25,7 @@ describe('Latent', () => {
 
       expect(await latent.read.name()).to.equal('Latent')
       expect(await latent.read.symbol()).to.equal('LATENT')
-      expect(await latent.read.description()).to.equal('The infinite between.')
+      expect(await latent.read.description()).to.equal(`80 surrealist works exploring the space between real and realized, premiering at Paris Photo 2024 on surrealism's centennial. Each token serves as an original digital negative, materializing as Silver Gelatin Prints via Paris's historic PICTO laboratory.`)
     })
 
     it('should expose valid contract metadata', async () => {
@@ -35,7 +35,7 @@ describe('Latent', () => {
       const data = decodeBase64URI(dataURI)
 
       expect(data.name).to.equal('Latent')
-      expect(data.description).to.equal('The infinite between.')
+      expect(data.description).to.equal(`80 surrealist works exploring the space between real and realized, premiering at Paris Photo 2024 on surrealism's centennial. Each token serves as an original digital negative, materializing as Silver Gelatin Prints via Paris's historic PICTO laboratory.`)
       expect(data.image).to.equal(`ipfs://${CID}/positive/1.jpg`)
     })
   })

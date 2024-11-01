@@ -97,8 +97,9 @@ describe('Latent', () => {
           .replace(/\s+\</g, '<')       // Remove all whitespace
           .trim()
 
-        expect(await latent.read.tokenAnimation([BigInt(id)]))
-          .to.equal(svg)
+        const generated = await latent.read.tokenAnimation([BigInt(id)])
+
+        expect(generated).to.equal(svg)
       }
     })
 
@@ -115,7 +116,6 @@ describe('Latent', () => {
         expect(data.description).to.equal('Digital negative as primary artifact.')
 
         expect(data.image).to.equal(`ipfs://${CID}/negative/${id}.jpg`)
-
 
         const svg = TEMPLATE
           .replace(

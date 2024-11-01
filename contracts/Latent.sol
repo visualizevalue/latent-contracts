@@ -52,12 +52,14 @@ contract Latent is ERC721 {
     function tokenURI(uint256 tokenId) external view override returns (string memory) {
         _requireOwned(tokenId);
 
+        string memory id = Strings.toString(tokenId);
+
         return Encode.json(abi.encodePacked(
             '{'
-                '"id": ', Strings.toString(tokenId), ','
-                '"name": "', tokenName(tokenId), '",'
+                '"id": ', id, ','
+                '"name": "\\"', tokenName(tokenId), '\\" - Digital Negative, Latent (', id, ' of 80)",'
                 '"description": "Digital negative as primary artifact.",',
-                '"image": "ipfs://', contentId, '/negative/', Strings.toString(tokenId), '.jpg",'
+                '"image": "ipfs://', contentId, '/negative/', id, '.jpg",'
                 '"animation_url": "', Encode.svg(bytes(tokenAnimation(tokenId, 'https://ipfs.vv.xyz/ipfs'))), '",'
                 '"attributes": ['
                     '{'

@@ -112,7 +112,7 @@ describe('Latent', () => {
         const data = decodeBase64URI(dataURI)
 
         expect(data.id).to.equal(parseInt(id))
-        expect(data.name).to.equal(tokenNames[id])
+        expect(data.name).to.equal(`"${tokenNames[id]}" - Digital Negative, Latent (${id} of 80)`)
         expect(data.description).to.equal('Digital negative as primary artifact.')
 
         expect(data.image).to.equal(`ipfs://${CID}/negative/${id}.jpg`)

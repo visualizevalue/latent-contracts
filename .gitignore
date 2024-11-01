@@ -1,0 +1,30 @@
+node_modules
+.env
+!.env.example
+
+#Tests
+test/dist/*
+!test/dist/.gitkeep
+
+#OS
+.DS_Store
+
+# Hardhat files
+/cache
+/artifacts/**
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+/ignition/deployments/chain-1337
+/ignition/deployments/chain-17000
+
+# Large files
+data/src-assets
+data/dist
